@@ -200,6 +200,15 @@ async function init() {
     return;
   }
   showDay();
+  // "Surprise me" button on the home-screen widget links to ...#surprise
+  const handleHash = () => {
+    if (location.hash === '#surprise') {
+      surprise();
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  };
+  handleHash();
+  window.addEventListener('hashchange', handleHash);
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 

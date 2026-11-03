@@ -1,6 +1,6 @@
 // Offline support: app shell is cache-first, quotes.json is network-first
 // so new messages show up as soon as they're published.
-const CACHE = 'sunshine-v1';
+const CACHE = 'sunshine-v2';
 const SHELL = ['./', 'index.html', 'app.js', 'quotes.json', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 

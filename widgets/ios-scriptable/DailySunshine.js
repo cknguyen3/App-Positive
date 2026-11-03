@@ -5,7 +5,8 @@
 //   2. Open Scriptable, tap +, paste this whole file, name it "Daily Sunshine".
 //   3. Long-press your home screen → + → Scriptable → pick a size → Add Widget.
 //   4. Long-press the new widget → Edit Widget → Script: "Daily Sunshine".
-//   Tapping the widget opens the full Daily Sunshine app.
+//   Tapping the widget opens the full Daily Sunshine app; tapping
+//   "Surprise me" (medium/large sizes) opens it with a random message.
 //
 // Running the script inside Scriptable shows a preview of the widget.
 
@@ -79,15 +80,34 @@ function buildWidget(q) {
   body.textColor = ink;
   body.minimumScaleFactor = 0.5;
 
-  if (q.author && !isSmall) {
-    w.addSpacer(6);
-    const a = w.addText("— " + q.author);
-    a.font = Font.semiboldRoundedSystemFont(isBig ? 15 : 12);
-    a.textColor = ink;
-    a.textOpacity = 0.75;
-  }
-
   w.addSpacer();
+
+  // Footer: author on the left, "Surprise me" button on the right.
+  // (Small widgets only allow one tap target, so they skip the button.)
+  if (!isSmall) {
+    const footer = w.addStack();
+    footer.layoutHorizontally();
+    footer.centerAlignContent();
+
+    if (q.author) {
+      const a = footer.addText("— " + q.author);
+      a.font = Font.semiboldRoundedSystemFont(isBig ? 15 : 12);
+      a.textColor = ink;
+      a.textOpacity = 0.75;
+      a.lineLimit = 1;
+      a.minimumScaleFactor = 0.7;
+    }
+    footer.addSpacer();
+
+    const btn = footer.addStack();
+    btn.backgroundColor = ink;
+    btn.cornerRadius = 11;
+    btn.setPadding(4, 10, 4, 10);
+    btn.url = APP_URL + "#surprise";
+    const bt = btn.addText("✨ Surprise me");
+    bt.font = Font.boldRoundedSystemFont(isBig ? 14 : 12);
+    bt.textColor = Color.white();
+  }
 
   // Ask iOS to refresh just after midnight so the new message appears.
   const tomorrow = new Date();
