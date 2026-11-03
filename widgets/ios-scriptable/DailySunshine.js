@@ -8,6 +8,11 @@
 //   Tapping the widget opens the full Daily Sunshine app; tapping
 //   "Surprise me" (medium/large sizes) opens it with a random message.
 //
+// Smart Stack (swipe through several messages):
+//   Add 2–3 Daily Sunshine widgets of the same size and drag them on top of
+//   each other. Edit each one and set "Parameter" to 1, 2, 3, ... Widget 1
+//   shows the message of the day, and the others show extra messages for today.
+//
 // Running the script inside Scriptable shows a preview of the widget.
 
 const APP_URL = "https://cknguyen3.github.io/App-Positive/";
@@ -44,14 +49,23 @@ async function loadQuotes() {
   return FALLBACK;
 }
 
-function todaysQuote(quotes) {
+// slot 0 is the message of the day (same on every device); slots 1, 2, ...
+// are extra messages for today, used by the other widgets in a Smart Stack.
+function todaysQuote(quotes, slot) {
   const now = new Date();
   const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
   const n = quotes.length;
-  return quotes[((day * STRIDE) % n + n) % n];
+  const base = ((day * STRIDE) % n + n) % n;
+  return quotes[(base + slot * 37) % n];
 }
 
-function buildWidget(q) {
+// Widget "Parameter" field: 1 (or empty) = message of the day, 2, 3, ... = extras.
+function slotFromParameter() {
+  const p = parseInt(String(args.widgetParameter || "").trim(), 10);
+  return Number.isFinite(p) && p > 1 ? p - 1 : 0;
+}
+
+function buildWidget(q, slot) {
   const size = config.widgetFamily || "medium";
   const w = new ListWidget();
   const [c1, c2] = COLORS[q.type] || COLORS.quote;
@@ -68,7 +82,9 @@ function buildWidget(q) {
   const isSmall = size === "small";
   const isBig = size === "large" || size === "extraLarge";
 
-  const label = w.addText("☀️ " + (LABELS[q.type] || LABELS.quote));
+  const label = w.addText(slot > 0
+    ? "✨ BONUS #" + slot + " FOR TODAY"
+    : "☀️ " + (LABELS[q.type] || LABELS.quote));
   label.font = Font.heavySystemFont(isSmall ? 9 : 11);
   label.textColor = ink;
   label.textOpacity = 0.7;
@@ -117,7 +133,8 @@ function buildWidget(q) {
 }
 
 const quotes = await loadQuotes();
-const widget = buildWidget(todaysQuote(quotes));
+const slot = slotFromParameter();
+const widget = buildWidget(todaysQuote(quotes, slot), slot);
 
 if (config.runsInWidget) {
   Script.setWidget(widget);
