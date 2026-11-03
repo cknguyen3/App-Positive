@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Daily Sunshine</string>
+    <string name="widget_name">Daily Sunshine</string>
+    <string name="widget_description">A positive, funny message or quote every day</string>
+    <string name="label_quote">QUOTE OF THE DAY</string>
+    <string name="label_funny">SMILE OF THE DAY</string>
+    <string name="label_kind">REMINDER OF THE DAY</string>
+    <string name="today_prefix">Today · %1$s</string>
+    <string name="bonus">Bonus round 🎉</string>
+    <string name="earlier">‹ Earlier</string>
+    <string name="today">Today</string>
+    <string name="later">Later ›</string>
+    <string name="surprise">✨ Surprise me</string>
+    <string name="share">Share</string>
+    <string name="loading">Loading a little sunshine…</string>
+</resources>

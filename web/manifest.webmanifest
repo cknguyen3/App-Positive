@@ -1,0 +1,16 @@
+{
+  "name": "Daily Sunshine",
+  "short_name": "Sunshine",
+  "description": "A positive, funny message or quote every day.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ff8a65",
+  "theme_color": "#ff8a65",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

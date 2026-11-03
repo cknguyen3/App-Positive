@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Daily Sunshine</title>
+  <meta name="description" content="A positive, funny message or quote every day.">
+  <meta name="theme-color" content="#ff8a65">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sunshine">
+  <style>
+    :root {
+      --ink: #2d1f33;
+      --muted: rgba(45, 31, 51, .7);
+      --card: rgba(255, 255, 255, .82);
+      --chip: rgba(255, 255, 255, .55);
+      --bg-quote: linear-gradient(160deg, #ffd27a 0%, #ff9a76 50%, #ff6f91 100%);
+      --bg-funny: linear-gradient(160deg, #a0f1ea 0%, #8fa8ff 55%, #c38bff 100%);
+      --bg-kind:  linear-gradient(160deg, #e3ffb8 0%, #8ee6b5 50%, #5cc8c8 100%);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #fff6ee;
+        --muted: rgba(255, 246, 238, .72);
+        --card: rgba(30, 20, 36, .72);
+        --chip: rgba(30, 20, 36, .5);
+        --bg-quote: linear-gradient(160deg, #6b3a1f 0%, #8a3349 55%, #3d1f4f 100%);
+        --bg-funny: linear-gradient(160deg, #164a52 0%, #2b3a8a 55%, #4a2380 100%);
+        --bg-kind:  linear-gradient(160deg, #2f4f1c 0%, #1f5f48 55%, #15474f 100%);
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg-quote);
+      background-attachment: fixed;
+      transition: background .6s ease;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100dvh;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+      -webkit-tap-highlight-color: transparent;
+    }
+    body[data-type="funny"] { background: var(--bg-funny); background-attachment: fixed; }
+    body[data-type="kind"]  { background: var(--bg-kind);  background-attachment: fixed; }
+
+    header { width: 100%; max-width: 640px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-weight: 800; font-size: 1.1rem; letter-spacing: .02em; display: flex; gap: 8px; align-items: center; }
+    .brand img { width: 28px; height: 28px; border-radius: 8px; }
+    .iconbtn {
+      background: var(--chip); color: var(--ink); border: 0; border-radius: 999px;
+      width: 40px; height: 40px; font-size: 1.1rem; cursor: pointer;
+      display: inline-grid; place-items: center;
+    }
+
+    main { flex: 1; width: 100%; max-width: 640px; display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 24px 0; }
+    .date { text-align: center; font-weight: 700; color: var(--muted); font-size: .95rem; }
+    .card {
+      background: var(--card); border-radius: 28px; padding: 36px 28px 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.15);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      position: relative; min-height: 260px;
+      display: flex; flex-direction: column; justify-content: center;
+      animation: pop .45s ease;
+    }
+    @keyframes pop { from { transform: translateY(10px) scale(.98); opacity: 0; } to { transform: none; opacity: 1; } }
+    .tag {
+      position: absolute; top: 16px; left: 20px; font-size: .75rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+    }
+    .fav { position: absolute; top: 10px; right: 12px; background: transparent; width: 44px; height: 44px; font-size: 1.4rem; }
+    .text { font-size: clamp(1.35rem, 4.6vw, 2rem); line-height: 1.35; font-weight: 700; margin: 8px 0 0; text-wrap: balance; }
+    .author { margin-top: 16px; font-weight: 600; color: var(--muted); }
+    .author:empty { display: none; }
+
+    .nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      background: var(--chip); color: var(--ink); border: 0; border-radius: 999px;
+      padding: 12px 18px; font: inherit; font-weight: 700; cursor: pointer;
+      min-height: 44px;
+    }
+    .btn:disabled { opacity: .4; cursor: default; }
+    .btn.primary { background: var(--ink); color: #fff; }
+    @media (prefers-color-scheme: dark) { .btn.primary { color: #2d1f33; } }
+
+    .hint { text-align: center; font-size: .9rem; color: var(--muted); }
+    .hint:empty { display: none; }
+
+    dialog {
+      border: 0; border-radius: 24px; padding: 24px; max-width: min(560px, calc(100vw - 32px));
+      width: 100%; background: var(--card); color: var(--ink);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      max-height: 80dvh;
+    }
+    dialog::backdrop { background: rgba(0,0,0,.35); }
+    dialog h2 { margin: 0 0 12px; font-size: 1.2rem; }
+    dialog ul { padding-left: 20px; margin: 0; }
+    dialog li { margin: 0 0 12px; line-height: 1.4; }
+    dialog .close { float: right; }
+    dialog a { color: inherit; font-weight: 700; }
+    .toast {
+      position: fixed; bottom: max(24px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px; font-weight: 700;
+      opacity: 0; transition: opacity .25s; pointer-events: none;
+    }
+    @media (prefers-color-scheme: dark) { .toast { color: #2d1f33; } }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body data-type="quote">
+  <header>
+    <div class="brand"><img src="icons/icon.svg" alt=""> Daily Sunshine</div>
+    <div>
+      <button class="iconbtn" id="favsBtn" title="Favorites" aria-label="Favorites">♥</button>
+      <button class="iconbtn" id="infoBtn" title="Get the widget" aria-label="Get the widget">＋</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="date" id="date"></div>
+    <article class="card" id="card">
+      <span class="tag" id="tag"></span>
+      <button class="iconbtn fav" id="favBtn" aria-label="Save to favorites">♡</button>
+      <p class="text" id="text">Loading a little sunshine…</p>
+      <div class="author" id="author"></div>
+    </article>
+    <div class="nav">
+      <button class="btn" id="prevBtn" aria-label="Previous day">‹ Earlier</button>
+      <button class="btn" id="todayBtn">Today</button>
+      <button class="btn" id="nextBtn" aria-label="Next day">Later ›</button>
+    </div>
+    <div class="nav">
+      <button class="btn primary" id="surpriseBtn">✨ Surprise me</button>
+      <button class="btn" id="shareBtn">Share</button>
+    </div>
+    <div class="hint" id="hint"></div>
+  </main>
+
+  <dialog id="infoDlg">
+    <button class="iconbtn close" data-close aria-label="Close">✕</button>
+    <h2>Get it on all your devices</h2>
+    <ul>
+      <li><b>iPhone / iPad (app):</b> in Safari tap <b>Share</b> → <b>Add to Home Screen</b>.</li>
+      <li><b>iPhone / iPad (widget):</b> install the free <b>Scriptable</b> app, add the
+        <a href="DailySunshine.js" target="_blank" rel="noopener">Daily Sunshine script</a> (open it, Select All → Copy, then paste into a new Scriptable script),
+        then add a Scriptable widget to your home screen and pick the script.</li>
+      <li><b>Android (app):</b> in Chrome tap <b>⋮</b> → <b>Install app</b>.</li>
+      <li><b>Android (widget):</b> install the
+        <a href="https://github.com/cknguyen3/App-Positive/releases/latest" target="_blank" rel="noopener">Daily Sunshine APK</a>,
+        then long-press your home screen → <b>Widgets</b> → <b>Daily Sunshine</b>.</li>
+      <li><b>Mac / Windows / Chromebook:</b> in Chrome or Edge click the install icon in the address bar.</li>
+    </ul>
+    <p class="hint">Every device shows the same message each day.</p>
+  </dialog>
+
+  <dialog id="favsDlg">
+    <button class="iconbtn close" data-close aria-label="Close">✕</button>
+    <h2>Your favorites</h2>
+    <ul id="favList"></ul>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<resources>
+    <color name="ink">#2D1F33</color>
+    <color name="ink_muted">#B32D1F33</color>
+    <color name="card">#D1FFFFFF</color>
+    <color name="chip">#8CFFFFFF</color>
+    <color name="primary_bg">#2D1F33</color>
+    <color name="primary_fg">#FFFFFF</color>
+
+    <color name="quote_start">#FFD27A</color>
+    <color name="quote_mid">#FF9A76</color>
+    <color name="quote_end">#FF6F91</color>
+    <color name="funny_start">#A0F1EA</color>
+    <color name="funny_mid">#8FA8FF</color>
+    <color name="funny_end">#C38BFF</color>
+    <color name="kind_start">#E3FFB8</color>
+    <color name="kind_mid">#8EE6B5</color>
+    <color name="kind_end">#5CC8C8</color>
+</resources>
